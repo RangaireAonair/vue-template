@@ -21,6 +21,7 @@
     "@commitlint/prompt-cli": "^19.7.0",
     "@release-it/conventional-changelog": "^10.0.0",
     "@vitejs/plugin-vue": "^5.2.1",
+    "auto-changelog": "^2.5.0",
     "commitizen": "^4.3.1",
     "conventional-changelog-atom": "^5.0.0",
     "cz-conventional-changelog": "^3.3.0",
@@ -58,7 +59,7 @@
       "commit": true,
       "tag": true,
       "push": false,
-      "changelog":  "npx auto-changelog --stdout --commit-limit false -u --template https://raw.githubusercontent.com/release-it/release-it/main/templates/changelog-compact.hbs"
+      "changelog": "npx auto-changelog --stdout --commit-limit false -u --template https://raw.githubusercontent.com/release-it/release-it/main/templates/changelog-compact.hbs"
     },
     "hooks": {
       "after:bump": "npx auto-changelog -p"
