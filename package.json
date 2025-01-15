@@ -58,7 +58,7 @@
       "commitMessage": "chore: release v${version}",
       "commit": true,
       "tag": true,
-      "push": false,
+      "push": true,
       "changelog": "npx auto-changelog --stdout --commit-limit false -u --template changelog-compact.hbs"
     },
     "hooks": {
