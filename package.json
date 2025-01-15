@@ -64,5 +64,8 @@
     "hooks": {
       "after:bump": "npx auto-changelog -p"
     }
+  },
+  "engines": {
+    "node": ">=20.9"
   }
 }
