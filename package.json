@@ -1,7 +1,7 @@
 {
   "name": "my-vue-app",
   "private": true,
-  "version": "1.0.2",
+  "version": "1.0.3",
   "type": "module",
   "scripts": {
     "commit": "cz",
@@ -58,7 +58,10 @@
       "commit": true,
       "tag": true,
       "push": false,
-      "changelog": true
+      "changelog":  "npx auto-changelog --stdout --commit-limit false -u --template https://raw.githubusercontent.com/release-it/release-it/main/templates/changelog-compact.hbs"
+    },
+    "hooks": {
+      "after:bump": "npx auto-changelog -p"
     }
   }
 }
