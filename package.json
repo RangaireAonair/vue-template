@@ -56,7 +56,7 @@
       "commitMessage": "chore: release v${version}",
       "commit": true,
       "tag": true,
-      "push": true
+      "push": false
     }
   }
 }
