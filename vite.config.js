@@ -5,6 +5,7 @@ import createZipPlugin from './src/plugins/zip.js';
 import { createHtmlPlugin } from 'vite-plugin-html';
 import viteCompression from 'vite-plugin-compression';
 import externalGlobals from 'rollup-plugin-external-globals';
+import miniImage from 'vite-plugin-minipic';
 import { name } from './package.json';
 
 // https://vite.dev/config/
@@ -32,6 +33,28 @@ export default defineConfig({
           vueScript: `<script src='https://cdn.jsdelivr.net/npm/vue@3.5.13/dist/vue.global.prod.js'></script>`
         }
       }
+    }),
+    miniImage({
+      sharpOptions: {
+        png: {
+          quality: 70
+        },
+        jpeg: {
+          quality: 70
+        },
+        jpg: {
+          quality: 70
+        },
+        webp: {
+          quality: 70
+        }
+      },
+      convert: [
+        { from: 'png', to: 'jpg' },
+        { from: 'jpg', to: 'webp' },
+        { from: 'jpeg', to: 'jpg' }
+      ],
+      cache: false
     })
   ],
   resolve: {
