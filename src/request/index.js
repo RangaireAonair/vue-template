@@ -1,7 +1,5 @@
 import axios from 'axios';
 import { useEnv } from '@/hooks/useEnv';
-import qs from 'qs';
-import { md5 } from 'js-md5';
 
 const { VITE_BASE_API } = useEnv();
 const Instance = axios.create({
@@ -68,24 +66,24 @@ const generateRequestKey = (params) => {
 };
 
 const request = (method = 'GET') => {
-  let cancel;
+  // let cancel;
   return (url, params, config = {}) =>
     new Promise((resolve) => {
-      cancel && cancel.abort();
-      cancel = new AbortController();
+      // cancel && cancel.abort();
+      // cancel = new AbortController();
       const ApiKey = generateRequestKey({ method, params, url });
-      if (!RequestMap.get(ApiKey)) {
-        RequestMap.set(ApiKey, ApiKey);
-      } else {
-        RequestMap.delete(ApiKey);
-        cancel.abort();
-      }
+      // if (!RequestMap.get(ApiKey)) {
+      //   RequestMap.set(ApiKey, ApiKey);
+      // } else {
+      //   RequestMap.delete(ApiKey);
+      //   cancel.abort();
+      // }
       Instance({
         method,
         url,
         ...generateParams(method, params),
-        ...config,
-        signal: cancel.signal
+        ...config
+        // signal: cancel.signal
       }).then(
         (response) => resolve([null, response]),
         (err) => resolve([err, null])
