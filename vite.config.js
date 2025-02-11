@@ -30,7 +30,9 @@ export default defineConfig({
       entry: 'src/main.js',
       inject: {
         data: {
-          vueScript: `<script src='https://cdn.jsdelivr.net/npm/vue@3.5.13/dist/vue.global.prod.js'></script>`
+          // vueScript: `<script src='https://cdn.jsdelivr.net/npm/vue@3.5.13/dist/vue.global.prod.js'></script>`,
+          // elementPlusScript: `<script src='<script src="//unpkg.com/element-plus"></script>'></script>`,
+          // IconScript: `<script src='https://unpkg.com/@element-plus/icons-vue'></script>`
         }
       }
     }),
@@ -66,23 +68,34 @@ export default defineConfig({
   build: {
     rollupOptions: {
       output: {
-        // chunkFileNames: 'js/[name]-[hash].js', // 引入文件名的名称
-        // entryFileNames: 'js/[name]-[hash].js', // 包的入口文件名称
-        // assetFileNames: '[ext]/[name]-[hash].[ext]' // 资源文件像 字体，图片等
+        chunkFileNames: 'js/[name]-[hash].js', // 引入文件名的名称
+        entryFileNames: 'js/[name]-[hash].js', // 包的入口文件名称
+        assetFileNames: '[ext]/[name]-[hash].[ext]', // 资源文件像 字体，图片等
+        manualChunks(id) {
+          if (id.includes('node_modules') && id.includes('element-plus')) {
+            return 'element-plus';
+          } else if (id.includes('node_modules')) {
+            return id.toString().split('node_modules/')[1].split('/')[0].toString();
+          } else {
+            return 'vendor';
+          }
+        }
       },
-      external: ['Vue']
-    }
-    // minify: 'esbuild',
-    // sourceMap: false,
-    // reportCompressedSize: false,
-    // minifyCSS: true,
-    // plugins: [
-    //   externalGlobals({
-    //     vue: 'Vue'
-    //   })
-    // ]
+      // external: ['Vue', 'element-plus', '@element-plus/icons-vue'],
+      plugins: [
+        // externalGlobals({
+        //   vue: 'Vue',
+        //   'element-plus': 'element-plus',
+        //   ElementPlusIconsVue: '@element-plus/icons-vue'
+        // })
+      ]
+    },
+    minify: 'esbuild',
+    sourceMap: false,
+    reportCompressedSize: false,
+    minifyCSS: true
+  },
+  esbuild: {
+    drop: ['debugger', 'console']
   }
-  // esbuild: {
-  //   drop: ['debugger', 'console']
-  // }
 });
