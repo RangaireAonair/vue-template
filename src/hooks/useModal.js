@@ -1,4 +1,4 @@
-import { h, createApp, ref, defineComponent } from 'vue';
+import { h, createApp, ref } from 'vue';
 import { ElButton, ElDialog } from 'element-plus';
 import { usePlugin } from '@/plugins/usePlugins';
 
@@ -7,31 +7,99 @@ const defaultProps = {
   cancelClick: Fn,
   confirmClick: Fn,
   confirmButtonText: 'Confirm',
-  cancelButtonText: 'Cancel'
+  cancelButtonText: 'Cancel',
+  confirmButtonLoading: false,
+  cancelButtonLoading: false,
+  confirmButtonDisabled: false,
+  cancelButtonDisabled: false,
+  confirmButtonType: 'primary',
+  cancelButtonType: 'default',
+  NoConfirmButton: false,
+  NoCancelButton: false
 };
-const footer = (options = {}) => {
-  const { confirmButtonText, cancelButtonText, cancelClick, confirmClick } = {
-    ...defaultProps,
-    ...options
+const footer = (options = defaultProps) => {
+  const {
+    confirmButtonText,
+    cancelButtonText,
+    cancelClick,
+    confirmClick,
+    confirmButtonLoading,
+    confirmButtonDisabled,
+    confirmButtonType,
+    cancelButtonDisabled,
+    cancelButtonLoading,
+    cancelButtonType,
+    NoConfirmButton,
+    NoCancelButton
+  } = { ...defaultProps, ...options };
+
+  const generateButton = (NoConfirm = false, NoCancel = false) => {
+    const ConfirmButton = NoConfirm
+      ? null
+      : h(
+          ElButton,
+          {
+            type: confirmButtonType,
+            disabled: confirmButtonDisabled,
+            loading: confirmButtonLoading,
+            onClick: confirmClick
+          },
+          () => confirmButtonText
+        );
+    const CancelButton = NoCancel
+      ? null
+      : h(
+          ElButton,
+          {
+            type: cancelButtonType,
+            disabled: cancelButtonDisabled,
+            loading: cancelButtonLoading,
+            onClick: cancelClick
+          },
+          () => cancelButtonText
+        );
+    return [CancelButton, ConfirmButton];
   };
-  return () =>
-    h('section', { class: '' }, [
-      h(ElButton, { type: 'default', onClick: () => cancelClick }, () => cancelButtonText),
-      h(
-        ElButton,
-        { type: 'primary', loading: true, disabled: true, onClick: () => confirmClick },
-        () => confirmButtonText
-      )
-    ]);
+  return () => h('section', { class: '' }, generateButton(NoConfirmButton, NoCancelButton));
 };
-export const useModal = (component, props, options) => {
+
+const parseFunctionString = (str) => {
+  try {
+    return new Function('return' + str)();
+  } catch (e) {
+    return null;
+  }
+};
+
+const checkObjectType = (obj) => {
+  if (obj.__v_isVNode || obj.$options || (obj.render && typeof obj.render === 'function')) {
+    return obj;
+  } else if (parseFunctionString(obj)) {
+    return parseFunctionString(obj);
+  }
+  throw new Error('Object type is required');
+};
+const useFooterDeFaultOptions = { Footer: false, FooterProps: defaultProps };
+const useFooter = (options = useFooterDeFaultOptions) => {
+  const { Footer, FooterProps, customFooter } = options;
+  if (Footer && typeof Footer === 'boolean') {
+    return footer(FooterProps);
+  }
+
+  if (customFooter && checkObjectType(customFooter)) {
+    return customFooter;
+  }
+  return h('div', null);
+};
+
+export const useModal = (component, modalProps, options) => {
   const visible = ref(true);
   const div = document.createElement('div');
   const modal = () =>
     h(
       ElDialog,
       {
-        ...options,
+        ...modalProps,
         modelValue: visible.value,
         onClosed: () => unmount(),
         onClose: () => {
@@ -39,8 +107,8 @@ export const useModal = (component, props, options) => {
         }
       },
       {
-        default: () => h(component, props),
-        footer: () => h(footer(), null)
+        default: () => h(component),
+        footer: () => h(useFooter(options), null)
       }
     );
   const unmount = () => {
