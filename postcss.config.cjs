@@ -9,7 +9,8 @@ module.exports = {
         /^router-link(|-exact)-active$/,
         /data-v-.*/,
         /el-.*/,
-        /is-.*/
+        /is-.*/,
+        /css-module-.*/
       ],
       defaultExtractor(content) {
         const contentWithoutStyleBlocks = content.replace(/<style[^]+?<\/style>/gi, '');

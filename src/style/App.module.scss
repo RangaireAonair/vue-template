@@ -1,0 +1,6 @@
+@use 'Common.module';
+
+.commonLayout {
+  @include Common.full();
+  @include Common.flex();
+}

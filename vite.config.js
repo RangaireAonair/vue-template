@@ -65,6 +65,14 @@ export default defineConfig({
     },
     extensions: ['.js', '.jsx']
   },
+  css: {
+    modules: {
+      hashPrefix: 'module',
+      generateScopedName(name, filename, css) {
+        return `css-module-${name}`;
+      }
+    }
+  },
   build: {
     rollupOptions: {
       output: {
