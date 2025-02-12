@@ -12,8 +12,16 @@
   flex-direction: $direction;
 }
 
+@mixin alignItems($align: 'center') {
+  align-items: $align;
+}
+
+@mixin justifyContent($align: 'center') {
+  justify-content: $align;
+}
+
 @mixin flexCenter {
   @include flexDirection(column);
-  justify-content: center;
-  align-items: center;
+  @include justifyContent();
+  @include alignItems();
 }

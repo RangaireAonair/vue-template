@@ -66,24 +66,24 @@ const generateRequestKey = (params) => {
 };
 
 const request = (method = 'GET') => {
-  // let cancel;
+  let cancel;
   return (url, params, config = {}) =>
     new Promise((resolve) => {
-      // cancel && cancel.abort();
-      // cancel = new AbortController();
+      cancel && cancel.abort();
+      cancel = new AbortController();
       const ApiKey = generateRequestKey({ method, params, url });
-      // if (!RequestMap.get(ApiKey)) {
-      //   RequestMap.set(ApiKey, ApiKey);
-      // } else {
-      //   RequestMap.delete(ApiKey);
-      //   cancel.abort();
-      // }
+      if (!RequestMap.get(ApiKey)) {
+        RequestMap.set(ApiKey, ApiKey);
+      } else {
+        RequestMap.delete(ApiKey);
+        cancel.abort();
+      }
       Instance({
         method,
         url,
         ...generateParams(method, params),
-        ...config
-        // signal: cancel.signal
+        ...config,
+        signal: cancel.signal
       }).then(
         (response) => resolve([null, response]),
         (err) => resolve([err, null])
