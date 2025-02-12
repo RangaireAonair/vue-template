@@ -1,8 +1,6 @@
 <script setup>
-import { ref, h } from 'vue';
-import { useModal } from '@/hooks/useModal.js';
-// import { ElButton } from 'element-plus';
-import testComponent from './testCom.vue';
+import { h } from 'vue';
+import { useModal } from '@/hooks/useModal';
 
 defineOptions({
   inheritAttrs: false
@@ -22,7 +20,7 @@ const showInfoModal = () => {
       //   confirmClick: () => console.log('confirm'),
       //   cancelClick: () => console.log('Cancel')
       // },
-      customFooter: testComponent
+      customFooter: h('div', null, 'this is custom footer')
     }
   );
 };
