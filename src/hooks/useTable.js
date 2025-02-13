@@ -21,10 +21,10 @@ const useTableColumns = (columns, TableProps, TableSlots) => {
         ...rest
       },
       {
-        default: () => {
-          const params = TableProps.data[index];
+        default: (scoped) => {
+          const params = TableProps.data[scoped.$index];
           if (slot && typeof slot === 'string') {
-            return renderSlot(TableSlots, slot, { ...params, prop, index });
+            return renderSlot(TableSlots, slot, { ...params, prop, index: scoped.$index });
           }
           if (render && typeof render === 'function') {
             try {
