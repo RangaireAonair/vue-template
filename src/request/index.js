@@ -1,5 +1,10 @@
 import axios from 'axios';
 import { useEnv } from '@/hooks/useEnv';
+import { CacheAdapterEnhancer } from '@/request/cacheAdapterEnhancer';
+import { LRUCache, ParserResponse } from '@/request/utils.js';
+const FIVE_MINUTES = 1000 * 60 * 5;
+const CAPACITY = 100;
+const CACHE = new LRUCache({ ttl: FIVE_MINUTES, max: CAPACITY });
 
 const { VITE_BASE_API } = useEnv();
 const Instance = axios.create({
@@ -10,15 +15,15 @@ const Instance = axios.create({
       'Content-Type': 'application/json;charset=utf-8'
     }
   },
+  adapter: [CacheAdapterEnhancer(axios.defaults.adapter, CACHE)],
   transformRequest: [(data) => JSON.stringify(data)],
   transformResponse: [
-    function (response, headers, status, error) {
-      if (status !== 200 && !headers['content-type'].startsWith('application/json')) {
+    function (response, headers, status) {
+      if (status !== 200) {
         return null;
       }
       try {
-        const { data = null, code } = JSON.parse(response);
-        if (code === 1 && data) return data;
+        return typeof response === 'string' ? ParserResponse(response) : response;
       } catch (e) {
         return null;
       }
@@ -50,13 +55,17 @@ Instance.interceptors.response.use(
     }
   },
   (err) => {
+    if (err.code === 'ERR_CANCELED') {
+      return Promise.reject(new Error('current request has canceled'));
+    }
+    // console.error(err.message);
     return Promise.reject(err.response);
   }
 );
 
-const generateParams = (method = 'GET', params) => {
-  const methodType = method.toUpperCase();
-  return ['get'].includes(methodType) ? params : { data: params };
+const generateParams = (method = 'GET', params = {}) => {
+  const methodType = method.toLowerCase();
+  return ['get'].includes(methodType) ? { params: params } : { data: params };
 };
 
 const RequestMap = new WeakMap();
@@ -67,7 +76,7 @@ const generateRequestKey = (params) => {
 
 const request = (method = 'GET') => {
   let cancel;
-  return (url, params, config = {}) =>
+  return (url, params = {}, config = {}) =>
     new Promise((resolve) => {
       cancel && cancel.abort();
       cancel = new AbortController();
