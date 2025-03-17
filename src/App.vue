@@ -5,7 +5,7 @@ import useTable from '@/components/useTable.vue';
 import styles from '@/style/App.module.scss';
 import Menu from '@/components/Menu/index.vue';
 const pageState = reactive({
-  current: 'useModal'
+  current: 'useTable'
 });
 const currentComponent = computed(() => {
   switch (pageState.current) {
