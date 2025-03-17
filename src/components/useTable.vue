@@ -1,61 +1,45 @@
 <script setup>
 import { onMounted, ref } from 'vue';
 import { useTable } from '@/hooks/useTable.js';
+import { getPage } from '@/api/index.js';
 const columns = [
+  { type: 'index', width: 200, fixed: 'left', label: 'No' },
   { prop: 'name', label: 'Name' },
-  { prop: 'date', label: 'Date' },
-  { prop: 'address', label: 'Address' }
+  {
+    prop: 'Date',
+    label: 'Date',
+    render: (h, { Date }) => {
+      return h('span', null, Date);
+    }
+  },
+  { prop: 'title', label: 'title', slot: 'address' },
+  { prop: 'content', label: 'content', slot: 'content', 'show-overflow-tooltip': true }
 ];
-const tableData = ref([
-  {
-    date: '2016-05-03',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles'
-  },
-  {
-    date: '2016-05-02',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles'
-  },
-  {
-    date: '2016-05-04',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles'
-  },
-  {
-    date: '2016-05-01',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles'
-  }
-]);
-const Table = useTable(tableData.value, columns);
+const tableData = ref([]);
+const { Table, page, size } = useTable(columns, { customFirst: false });
 onMounted(() => {
-  setTimeout(() => {
-    tableData.value.push({
-      date: '1',
-      name: '1',
-      address: 'No.1'
-    });
-  }, 1000);
-  setTimeout(() => {
-    tableData.value.push({
-      date: '2',
-      name: '2',
-      address: 'No.2'
-    });
-  }, 2000);
-  setTimeout(() => {
-    tableData.value.push({
-      date: '3',
-      name: '3',
-      address: 'No.3'
-    });
-  }, 3000);
+  getList();
 });
+const getList = () => {
+  getPage({ page: page.value, size: size.value }).then((res) => {
+    const [err, data] = res;
+    if (!err) tableData.value = data;
+  });
+};
 </script>
 
 <template>
-  <Table></Table>
+  <Table :data="tableData">
+    <template v-slot:address="{ title }">
+      <div>{{ title }}</div>
+    </template>
+    <template v-slot:content="{ content }">
+      <div>{{ content }}</div>
+    </template>
+    <template v-slot:empty>
+      <div>this is custom empty content</div>
+    </template>
+  </Table>
 </template>
 
 <style scoped></style>

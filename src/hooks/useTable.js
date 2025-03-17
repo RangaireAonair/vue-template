@@ -1,11 +1,23 @@
-import { h, renderSlot } from 'vue';
+import { h, renderSlot, reactive, ref, toRefs, watchEffect } from 'vue';
 import { ElTable, ElTableColumn } from 'element-plus';
 import { isObject } from '@/utils/typeCheck';
+import { usePagination } from '@/hooks/usePagination';
+
+const pagination = usePagination();
 const hasTablePropsData = (target) => {
   return Array.isArray(target);
 };
 const defaultProps = {
-  customFirst: true
+  customFirst: true,
+  noPagination: false
+};
+
+const styleOptions = {
+  width: '100%',
+  height: '100%',
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '10px'
 };
 const useTableColumns = (columns, TableProps, TableSlots) => {
   return columns.map((item, index) => {
@@ -45,15 +57,21 @@ export const useTable = (columns, options = defaultProps) => {
   ElTable.inheritAttrs = false;
   ElTableColumn.inheritAttrs = false;
 
-  const { customFirst = true } = isObject(options) ? options : {};
-  return (_, { slots }) =>
+  const pageState = reactive({
+    page: 1,
+    size: 10
+  });
+
+  const { customFirst = true, noPagination = false } = isObject(options) ? options : {};
+  const Table = (_, { slots }) =>
     hasTablePropsData(_?.data)
-      ? h('section', null, [
+      ? h('section', { style: { ...styleOptions } }, [
           h(
             ElTable,
             {
               border: true,
               stripe: true,
+              style: { flex: 1 },
               ..._
             },
             {
@@ -70,7 +88,18 @@ export const useTable = (columns, options = defaultProps) => {
                   : defaultSlots.concat(tableColumns);
               }
             }
-          )
+          ),
+          noPagination
+            ? null
+            : h(pagination, {
+                total: 12,
+                'modelValue:current-page': pageState.page,
+                'modelValue:pageSize': pageState.size,
+                pageSizes: [10, 20, 30, 50],
+                layout: 'total, sizes, prev, pager, next, jumper'
+                // 'onUpdate:current-page': (value) => (pageState.page = value),
+                // 'onUpdate:pageSize': (value) => (pageState.size = value)
+              })
         ])
       : h(
           'div',
@@ -82,4 +111,12 @@ export const useTable = (columns, options = defaultProps) => {
           },
           'Component Table Is Required Data Prop With Array!'
         );
+  watchEffect(() => {
+    console.log(pageState.page);
+    console.log(pageState.size);
+  });
+  return {
+    Table,
+    ...toRefs(pageState)
+  };
 };
