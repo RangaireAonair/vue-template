@@ -29,6 +29,7 @@ export async function download(url) {
     } else if (type === 'done') {
       console.log('文件下载完成:', data);
       writer.close();
+      worker.terminate();
     } else if (type === 'error') {
       writer.abort();
       console.error('下载出错:', data);
