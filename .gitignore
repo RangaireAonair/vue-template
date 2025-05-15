@@ -9,8 +9,12 @@ lerna-debug.log*
 
 node_modules
 dist
+dist.zip
+stats.html
 dist-ssr
 *.local
+auto-imports.d.ts
+components.d.ts
 
 # Editor directories and files
 my-vue-app/.vscode/extensions.json
