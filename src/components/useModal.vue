@@ -1,5 +1,4 @@
 <script setup>
-import { h } from 'vue';
 import { useModal } from '@/hooks/useModal';
 
 defineOptions({

@@ -1,5 +1,4 @@
 <script setup>
-import { onMounted, ref } from 'vue';
 import { useTable } from '@/hooks/useTable.js';
 import { getPage } from '@/api/index.js';
 const columns = [

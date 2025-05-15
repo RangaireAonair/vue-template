@@ -1,7 +1,7 @@
 import path from 'path';
 import fs from 'fs';
 import archiver from 'archiver';
-import dayjs from 'dayjs';
+import { dayjs } from 'element-plus';
 
 const generateFileName = (fileName) => {
   const dateParams = {

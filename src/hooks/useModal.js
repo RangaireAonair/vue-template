@@ -1,6 +1,5 @@
 import { h, createApp, ref } from 'vue';
 import { ElButton, ElDialog } from 'element-plus';
-import { usePlugin } from '@/plugins/usePlugins';
 
 const Fn = () => {};
 const defaultProps = {
@@ -117,6 +116,5 @@ export const useModal = (component, modalProps, options) => {
   };
   const App = createApp(modal);
   App.mount(div);
-  usePlugin(App);
   document.body.appendChild(div);
 };

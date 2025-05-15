@@ -38,7 +38,9 @@ const handleSelect = (key) => {
     @select="handleSelect"
   >
     <el-menu-item index="Logo">
-      <img style="width: 100px; height: 40px" src="/vite.svg" alt="Element logo" />
+      <image>
+        <source src="https://api.dicebear.com/7.x/avataaars/svg?seed=sexy" type="image" />
+      </image>
     </el-menu-item>
     <template v-for="menuItem in menuItems" :key="menuItem.name">
       <el-menu-item :index="menuItem.value">{{ menuItem.name }}</el-menu-item>

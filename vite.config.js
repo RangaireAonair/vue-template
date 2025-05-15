@@ -1,67 +1,15 @@
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import { resolve } from 'path';
-import createZipPlugin from './src/plugins/zip.js';
-import { createHtmlPlugin } from 'vite-plugin-html';
-import viteCompression from 'vite-plugin-compression';
-import externalGlobals from 'rollup-plugin-external-globals';
-import miniImage from 'vite-plugin-minipic';
-import { name } from './package.json';
+import { vitePlugins } from './src/plugins';
 
 // https://vite.dev/config/
 /** @type {import('vite').UserConfig} */
 export default defineConfig({
-  plugins: [
-    vue(),
-    createZipPlugin({ packageName: name }),
-    viteCompression({
-      /** 是否在控制控台打印被 压缩的文件信息 */
-      verbose: false,
-      /** 是否禁用压缩、默认为false */
-      disable: false,
-      /** 启用压缩的文件大小限制，单位是字节，默认为0 */
-      threshold: 10240,
-      ext: '.gz',
-      algorithm: 'gzip',
-      deleteOriginFile: true
-    }),
-    createHtmlPlugin({
-      minify: false,
-      entry: 'src/main.js',
-      inject: {
-        data: {
-          // vueScript: `<script src='https://cdn.jsdelivr.net/npm/vue@3.5.13/dist/vue.global.prod.js'></script>`,
-          // elementPlusScript: `<script src='<script src="//unpkg.com/element-plus"></script>'></script>`,
-          // IconScript: `<script src='https://unpkg.com/@element-plus/icons-vue'></script>`
-        }
-      }
-    }),
-    miniImage({
-      sharpOptions: {
-        png: {
-          quality: 70
-        },
-        jpeg: {
-          quality: 70
-        },
-        jpg: {
-          quality: 70
-        },
-        webp: {
-          quality: 70
-        }
-      },
-      convert: [
-        { from: 'png', to: 'jpg' },
-        { from: 'jpg', to: 'webp' },
-        { from: 'jpeg', to: 'jpg' }
-      ],
-      cache: false
-    })
-  ],
+  plugins: [vue(), ...vitePlugins],
   resolve: {
     alias: {
-      '@': resolve(__dirname, 'src')
+      '@': resolve(__dirname, './src')
     },
     extensions: ['.js', '.jsx']
   },

@@ -1,5 +1,4 @@
 <script setup>
-import { computed, reactive } from 'vue';
 import useModal from '@/components/useModal.vue';
 import useTable from '@/components/useTable.vue';
 import styles from '@/style/App.module.scss';
