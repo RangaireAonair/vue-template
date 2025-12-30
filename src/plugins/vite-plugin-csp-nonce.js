@@ -19,7 +19,9 @@ export default function vitePluginCspNonce() {
         `default-src 'self'`,
         `script-src 'self' ${isDev ? "'unsafe-eval' 'unsafe-inline'" : `'nonce-${nonce}'`}`, // 开发环境允许 eval
         `style-src 'self' ${isDev ? "'unsafe-inline'" : `'nonce-${nonce}'`}`,
-        `connect-src 'self' ${isDev ? 'http://localhost:9527' : 'http://localhost:9527'}`
+        `connect-src 'self' ${isDev ? 'https://jsonplaceholder.typicode.com' : 'http://localhost:9527'}`,
+        `img-src 'self' https://api.dicebear.com`,
+        `child-src https://www.baidu.com`
       ].join('; ');
 
       // 注入 CSP meta 标签和 nonce 到 script/style

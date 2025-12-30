@@ -2,6 +2,7 @@ import viteCompression from 'vite-plugin-compression';
 import sri from 'vite-plugin-sri';
 import vitePluginCspNonce from './vite-plugin-csp-nonce';
 import miniImage from 'vite-plugin-minipic';
+import Inspect from 'vite-plugin-inspect';
 import createZipPlugin from './zip.js';
 import AutoImport from 'unplugin-auto-import/vite';
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers';
@@ -24,7 +25,7 @@ const pressionPlugin = () =>
     threshold: 10240,
     ext: '.gz',
     algorithm: 'gzip',
-    deleteOriginFile: true
+    deleteOriginFile: false
   });
 
 const miniImagePlugin = () =>
@@ -83,10 +84,13 @@ const elementPlus = () => [
 ];
 const visualizerPlugin = () =>
   visualizer({
-    open: true
+    open: false
   });
 export const vitePlugins = [
   sriPlugin(),
+  Inspect({
+    dev: false
+  }),
   visualizerPlugin(),
   pressionPlugin(),
   vitePluginCspNonce(),

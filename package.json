@@ -51,6 +51,7 @@
     "vite": "^6.3.5",
     "vite-plugin-compression": "^0.5.1",
     "vite-plugin-html": "^3.2.2",
+    "vite-plugin-inspect": "^11.1.0",
     "vite-plugin-minipic": "^1.2.0"
   },
   "lint-staged": {
@@ -89,5 +90,6 @@
   },
   "engines": {
     "node": ">=20.9"
-  }
+  },
+  "sideEffects": false
 }

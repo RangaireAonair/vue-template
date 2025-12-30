@@ -1,6 +1,4 @@
 <script setup>
-import useModal from '@/components/useModal.vue';
-import useTable from '@/components/useTable.vue';
 import styles from '@/style/App.module.scss';
 import Menu from '@/components/Menu/index.vue';
 const pageState = reactive({
@@ -9,9 +7,9 @@ const pageState = reactive({
 const currentComponent = computed(() => {
   switch (pageState.current) {
     case 'useModal':
-      return useModal;
+      return defineAsyncComponent(() => import('@/components/useModal.vue'));
     case 'useTable':
-      return useTable;
+      return defineAsyncComponent(() => import('@/components/useTable.vue'));
   }
 });
 </script>

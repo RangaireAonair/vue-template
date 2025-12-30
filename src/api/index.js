@@ -1,8 +1,15 @@
-import { get, post } from '@/request';
+import { get, post } from '@/request/request.js';
 
 export function getPage(params) {
-  console.log(params);
-  return get(`/posts`, params, { cache: true });
+  return get(`/posts`, params, {
+    cache: true
+    // meta: {
+    //   validator: { code: 1 },
+    //   transform: ({ raw }) => {
+    //     return raw.filter(({ userId }) => userId === 1);
+    //   }
+    // }
+  });
 }
 export function getPost(params) {
   return get(`/posts`, params, { cache: false });
